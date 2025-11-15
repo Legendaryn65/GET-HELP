@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Solarium Sanctuary – Life Sorting Room</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Optional: Google Fonts for softer vibe -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f7efe7;
+      --bg-soft: #f3e5d8;
+      --bg-card: rgba(255, 255, 255, 0.9);
+      --ink: #3b2f2f;
+      --ink-soft: #6f5b4f;
+      --accent: #b8c9a1;
+      --accent-deep: #6a7f5f;
+      --accent-rose: #e7c1af;
+      --accent-gold: #fadca4;
+      --shadow-soft: 0 18px 40px rgba(119, 93, 63, 0.24);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, #fbe8d0 0, transparent 55%),
+        radial-gradient(circle at bottom right, #e0e4cf 0, transparent 55%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 960px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(247,239,231,0.96));
+      border-radius: 28px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(176, 145, 116, 0.25);
+      padding: 18px 14px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Watercolor corner vines */
+    .corner-vine {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.35;
+      filter: blur(0.2px);
+    }
+
+    .corner-vine.top-left {
+      top: -10px;
+      left: -6px;
+      width: 140px;
+      height: 140px;
+      background:
+        radial-gradient(circle at 30% 10%, rgba(186, 211, 163, 0.7), transparent 60%),
+        radial-gradient(circle at 80% 70%, rgba(239, 196, 164, 0.6), transparent 60%);
+      border-radius: 50%;
+    }
+
+    .corner-vine.bottom-right {
+      bottom: -18px;
+      right: -10px;
+      width: 160px;
+      height: 160px;
+      background:
+        radial-gradient(circle at 60% 20%, rgba(233, 182, 152, 0.7), transparent 60%),
+        radial-gradient(circle at 10% 80%, rgba(178, 203, 165, 0.7), transparent 60%);
+      border-radius: 50%;
+    }
+
+    @media (min-width: 720px) {
+      .app-shell {
+        padding: 22px 24px 24px;
+      }
+    }
+
+    header.app-header {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .title-block h1 {
+      font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+      font-size: 1.8rem;
+      margin: 0 0 4px;
+      letter-spacing: 0.04em;
+    }
+
+    .title-block p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+    }
+
+    .sun-pill {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, #fadca4, #f5b8a0);
+      box-shadow: 0 6px 18px rgba(220, 167, 112, 0.55);
+      color: #533118;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .sun-pill span.icon {
+      font-size: 0.95rem;
+    }
+
+    /* Nav chips */
+    .nav-chips {
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-chip {
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(187, 156, 124, 0.4);
+      background: rgba(250, 242, 233, 0.8);
+      padding: 6px 11px;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.12s ease-out, transform 0.08s ease-out, box-shadow 0.08s ease-out;
+    }
+
+    .nav-chip:hover {
+      background: rgba(250, 231, 213, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(160, 126, 95, 0.28);
+    }
+
+    .nav-chip span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent-deep);
+    }
+
+    .nav-chip.active {
+      background: linear-gradient(135deg, #f9e1c6, #f5d2b7);
+      box-shadow: 0 6px 18px rgba(158, 112, 72, 0.35);
+      color: #4a2d1a;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .layout-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      position: relative;
+      z-index: 1;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(199, 165, 128, 0.45);
+      box-shadow: 0 10px 26px rgba(132, 101, 72, 0.18);
+      padding: 12px 12px 13px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .panel-title {
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+
+    .panel-sub {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .panel-badge {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed rgba(187, 156, 124, 0.6);
+      background: rgba(247, 232, 214, 0.85);
+      color: var(--ink-soft);
+      white-space: nowrap;
+    }
+
+    /* Atrium: Mood + Energy */
+
+    .atrium-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .atrium-top {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .window {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(203, 174, 141, 0.7);
+      padding: 6px;
+      background: linear-gradient(165deg, #f9ebdd, #f5e2d2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .window-frame {
+      border-radius: 18px;
+      border: 1px solid rgba(239, 218, 197, 0.9);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.85), rgba(245,222,203,0.9));
+      padding: 10px 10px 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .window-sky {
+      height: 86px;
+      border-radius: 14px;
+      border: 1px solid rgba(224, 200, 180, 0.8);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.7);
+      background: linear-gradient(180deg, #f9f3e9, #f0e0cf);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .window-sky::before,
+    .window-sky::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(4px);
+      opacity: 0.7;
+    }
+
+    .window-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .window-label-row .mood-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .window-label-row .weather-tag {
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+    }
+
+    .sky-emoji {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      font-size: 1.4rem;
+    }
+
+    .dust-motes {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.6) 0, transparent 55%),
+        radial-gradient(circle at 80% 60%, rgba(255,255,255,0.45) 0, transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+    }
+
+    .energy-card {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(196, 167, 138, 0.9);
+      padding: 10px 10px 9px;
+      background: linear-gradient(160deg, #f6e9dc, #f1e2d2);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .energy-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .energy-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .energy-value {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-deep);
+    }
+
+    .energy-pot {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pot-visual {
+      width: 56px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #d7bba0, #b78f6e);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      box-shadow: 0 8px 18px rgba(149, 112, 79, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pot-lip {
+      position: absolute;
+      top: 0;
+      left: 7px;
+      right: 7px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #f3d2b0, #c79972);
+      box-shadow: 0 4px 8px rgba(131, 97, 69, 0.65);
+    }
+
+    .plant-stem {
+      position: relative;
+      z-index: 1;
+      width: 8px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #8fae6f, #567245);
+      transform-origin: bottom center;
+      animation: sway 4s ease-in-out infinite alternate;
+    }
+
+    .leaf {
+      width: 16px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a9c488, #7c9f5a);
+      position: absolute;
+    }
+
+    .leaf.left {
+      left: -12px;
+      top: 18px;
+      transform: rotate(-15deg);
+    }
+
+    .leaf.right {
+      right: -12px;
+      top: 8px;
+      transform: rotate(18deg);
+    }
+
+    .leaf.small {
+      transform: scale(0.7);
+      opacity: 0.8;
+    }
+
+    .energy-note {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+    }
+
+    @keyframes sway {
+      0% { transform: rotate(-2deg); }
+      100% { transform: rotate(3deg); }
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      appearance: none;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(200, 167, 132, 0.35);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid rgba(144, 110, 80, 0.9);
+      box-shadow: 0 0 0 3px rgba(251, 218, 177, 0.9);
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid rgba(144, 110, 80, 0.9);
+      box-shadow: 0 0 0 3px rgba(251, 218, 177, 0.9);
+      cursor: pointer;
+    }
+
+    .pill-badge {
+      min-width: 50px;
+      text-align: center;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      border: 1px solid rgba(196, 167, 138, 0.8);
+      background: rgba(249, 228, 204, 0.9);
+      color: var(--ink-soft);
+    }
+
+    /* Garden: Tasks */
+
+    .garden-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .garden-tab {
+      padding: 4px 9px;
+      border-radius: var(--radius-sm);
+      font-size: 0.76rem;
+      border: 1px solid rgba(190, 160, 134, 0.7);
+      background: rgba(248, 235, 222, 0.9);
+      color: var(--ink-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .garden-tab.active {
+      background: linear-gradient(135deg, #f6dfc7, #f0caa8);
+      color: #4c2e1a;
+    }
+
+    .garden-tab span.icon {
+      font-size: 0.9rem;
+    }
+
+    .task-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+      align-items: flex-end;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1 1 120px;
+      min-width: 0;
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+    }
+
+    .field-input,
+    .field-select {
+      font-size: 0.8rem;
+      padding: 6px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(188, 160, 132, 0.8);
+      background: rgba(255, 255, 255, 0.9);
+      outline: none;
+      color: var(--ink);
+    }
+
+    .field-input:focus,
+    .field-select:focus {
+      border-color: var(--accent-deep);
+      box-shadow: 0 0 0 1px rgba(106, 127, 95, 0.45);
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(182, 138, 101, 0.9);
+      background: linear-gradient(135deg, #f4cfaa, #e4a881);
+      color: #4b2b17;
+      font-size: 0.8rem;
+      padding: 7px 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 16px rgba(171, 123, 84, 0.5);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      filter: brightness(1.03);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 8px rgba(171, 123, 84, 0.5);
+    }
+
+    .btn.secondary {
+      background: rgba(249, 234, 219, 0.96);
+      color: var(--ink-soft);
+      border-style: dashed;
+      box-shadow: none;
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 260px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .task-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 7px;
+      border-radius: 14px;
+      border: 1px solid rgba(204, 174, 140, 0.9);
+      background: rgba(253, 245, 237, 0.96);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-plant {
+      width: 32px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #d7baa0, #c29573);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(152, 112, 77, 0.7);
+      position: relative;
+    }
+
+    .task-plant .little-stem {
+      width: 6px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #8fae6f, #5a7a44);
+      margin-bottom: 6px;
+      position: relative;
+    }
+
+    .little-leaf {
+      width: 10px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a7c288, #7c9e5c);
+      position: absolute;
+    }
+
+    .little-leaf.left {
+      left: -8px;
+      top: 4px;
+      transform: rotate(-18deg);
+    }
+
+    .little-leaf.right {
+      right: -8px;
+      top: -1px;
+      transform: rotate(16deg);
+    }
+
+    .task-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .task-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .task-meta {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .task-chip {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(183, 149, 119, 0.7);
+      background: rgba(249, 236, 222, 0.9);
+    }
+
+    .task-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .tiny-btn {
+      border: none;
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 0.72rem;
+      cursor: pointer;
+      padding: 2px 0;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+
+    .tiny-btn.danger {
+      color: #9f4d32;
+    }
+
+    .task-card.completed {
+      background: linear-gradient(135deg, #f3ecd3, #e1f0d9);
+      border-color: rgba(139, 170, 118, 0.9);
+    }
+
+    .task-card.completed .task-title {
+      text-decoration: line-through;
+      opacity: 0.8;
+    }
+
+    .task-card.completed::after {
+      content: "bloomed";
+      position: absolute;
+      right: 10px;
+      bottom: 4px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #587246;
+    }
+
+    /* Weather window: mood descriptions */
+
+    .mood-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .mood-chip {
+      border-radius: 999px;
+      border: 1px solid rgba(191, 160, 131, 0.7);
+      background: rgba(250, 236, 224, 0.95);
+      font-size: 0.78rem;
+      padding: 4px 9px;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .mood-chip.active {
+      background: linear-gradient(135deg, #f9e7d5, #f2d2be);
+      color: #4b2c1a;
+    }
+
+    .mood-chip span.icon {
+      font-size: 0.95rem;
+    }
+
+    .mood-description {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      background: rgba(248, 236, 224, 0.96);
+      border-radius: 14px;
+      border: 1px solid rgba(207, 178, 148, 0.8);
+      padding: 8px 9px;
+      min-height: 60px;
+      line-height: 1.4;
+    }
+
+    /* Journal */
+
+    .journal-area {
+      border-radius: 18px;
+      border: 1px solid rgba(199, 168, 139, 0.95);
+      background: repeating-linear-gradient(
+        180deg,
+        #f9f0e6,
+        #f9f0e6 26px,
+        #f2e3d7 27px
+      );
+      padding: 10px 10px 9px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .journal-area textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      resize: vertical;
+      min-height: 120px;
+      font-family: "Nunito", system-ui, sans-serif;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .journal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .vine-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 5% 10%, rgba(193, 209, 175, 0.5) 0, transparent 50%),
+        radial-gradient(circle at 90% 90%, rgba(228, 191, 164, 0.45) 0, transparent 55%);
+      mix-blend-mode: multiply;
+      opacity: 0.4;
+    }
+
+    /* Weekly path */
+
+    .path-wrapper {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(196, 167, 138, 0.9);
+      background: linear-gradient(145deg, #f7ecdf, #f1e2d3);
+      padding: 10px 10px 10px;
+    }
+
+    .path-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .path-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .path-marker {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #fef8ef, #e3c89f);
+      border: 1px solid rgba(187, 151, 114, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .path-summary {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      border-radius: 14px;
+      border: 1px dashed rgba(183, 151, 123, 0.8);
+      padding: 6px 8px;
+      background: rgba(250, 237, 224, 0.98);
+    }
+
+    /* Toast */
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(16px);
+      padding: 7px 13px;
+      border-radius: 999px;
+      border: 1px solid rgba(177, 142, 112, 0.9);
+      background: rgba(250, 237, 222, 0.98);
+      color: var(--ink-soft);
+      font-size: 0.78rem;
+      box-shadow: 0 6px 14px rgba(167, 131, 100, 0.6);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+      z-index: 20;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast span.icon {
+      font-size: 0.9rem;
+    }
+
+    /* Scroll behavior for nav */
+
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="corner-vine top-left"></div>
+    <div class="corner-vine bottom-right"></div>
+
+    <header class="app-header">
+      <div class="title-block">
+        <h1>Solarium Sanctuary</h1>
+        <p>The Life Sorting Room – a sunlit place to tend your mind, tasks, and moods.</p>
+      </div>
+      <div class="sun-pill">
+        <span class="icon">🌞</span>
+        INNER WEATHER
+      </div>
+    </header>
+
+    <div class="nav-chips">
+      <button class="nav-chip active" data-target="atrium">
+        <span class="dot"></span>
+        Atrium
+      </button>
+      <button class="nav-chip" data-target="garden">
+        <span class="dot"></span>
+        Garden Beds
+      </button>
+      <button class="nav-chip" data-target="weather">
+        <span class="dot"></span>
+        Weather Window
+      </button>
+      <button class="nav-chip" data-target="journal">
+        <span class="dot"></span>
+        Greenhouse Journal
+      </button>
+      <button class="nav-chip" data-target="path">
+        <span class="dot"></span>
+        Forest Path
+      </button>
+    </div>
+
+    <!-- Main layout -->
+    <div class="layout-grid">
+      <!-- Left column: Atrium + Garden -->
+      <div>
+        <!-- ATRIUM -->
+        <section class="panel" id="atrium">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Atrium</div>
+              <div class="panel-sub">Your inner weather and energy at a glance.</div>
+            </div>
+            <div class="panel-badge">Step into the room</div>
+          </div>
+
+          <div class="atrium-top">
+            <!-- Mood Window -->
+            <div class="window">
+              <div class="window-frame">
+                <div class="window-sky" id="sky">
+                  <div class="dust-motes"></div>
+                  <div class="sky-emoji" id="skyEmoji">🌤️</div>
+                </div>
+                <div class="window-label-row">
+                  <div>
+                    <div class="mood-label" id="moodLabel">Partly open</div>
+                    <div class="weather-tag" id="moodTag">Soft light with a few clouds.</div>
+                  </div>
+                  <div style="font-size: 0.7rem; color: var(--ink-soft);">Today’s sky</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Energy Pot -->
+            <div class="energy-card">
+              <div class="energy-top-row">
+                <div>
+                  <div class="energy-label">Energy terrarium</div>
+                  <div class="panel-sub" style="margin-top: 2px;">Where’s your fuel sitting right now?</div>
+                </div>
+                <div class="energy-value" id="energyValue">60%</div>
+              </div>
+
+              <div class="slider-row">
+                <input type="range" id="energySlider" min="0" max="100" value="60" />
+                <div class="pill-badge" id="energyWord">Steady</div>
+              </div>
+
+              <div class="energy-pot">
+                <div class="pot-visual" id="potVisual">
+                  <div class="pot-lip"></div>
+                  <div class="plant-stem" id="plantStem" style="height: 36px;">
+                    <div class="leaf left"></div>
+                    <div class="leaf right"></div>
+                  </div>
+                </div>
+                <div class="energy-note" id="energyNote">
+                  Enough sunlight to move gently through your tasks. No need to sprint.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- GARDEN BEDS: Tasks -->
+        <section class="panel" id="garden" style="margin-top: 12px;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Garden Beds</div>
+              <div class="panel-sub">Tasks as plants. Plant seeds, let them bloom, or compost them.</div>
+            </div>
+          </div>
+
+          <div class="garden-tabs">
+            <button class="garden-tab active" data-filter="all">
+              <span class="icon">🌿</span>All
+            </button>
+            <button class="garden-tab" data-filter="personal">
+              <span class="icon">🌱</span>Personal
+            </button>
+            <button class="garden-tab" data-filter="work">
+              <span class="icon">🌼</span>Work
+            </button>
+            <button class="garden-tab" data-filter="creative">
+              <span class="icon">🍃</span>Creative
+            </button>
+            <button class="garden-tab" data-filter="relationship">
+              <span class="icon">🌳</span>Relationships
+            </button>
+          </div>
+
+          <form class="task-form" id="taskForm">
+            <div class="field-group">
+              <label class="field-label" for="taskTitle">New seed</label>
+              <input class="field-input" id="taskTitle" type="text" placeholder="Water the idea of..." />
+            </div>
+            <div class="field-group" style="max-width: 140px;">
+              <label class="field-label" for="taskCategory">Bed</label>
+              <select class="field-select" id="taskCategory">
+                <option value="personal">Personal – herbs</option>
+                <option value="work">Work – flowers</option>
+                <option value="creative">Creative – vines</option>
+                <option value="relationship">Relationships – small trees</option>
+              </select>
+            </div>
+            <div class="field-group" style="max-width: 120px;">
+              <label class="field-label" for="taskPriority">Sun needs</label>
+              <select class="field-select" id="taskPriority">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <button class="btn" type="submit">
+              <span>🌱</span>Plant
+            </button>
+          </form>
+
+          <div class="task-list" id="taskList"></div>
+        </section>
+      </div>
+
+      <!-- Right column: Weather, Journal, Path -->
+      <div>
+        <!-- WEATHER WINDOW DETAILS -->
+        <section class="panel" id="weather">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Weather Window</div>
+              <div class="panel-sub">Name what kind of sky you’re under. The plants respond.</div>
+            </div>
+          </div>
+
+          <div class="mood-list">
+            <button class="mood-chip active" data-mood="sunny">
+              <span class="icon">☀️</span>Sunny
+            </button>
+            <button class="mood-chip" data-mood="partly">
+              <span class="icon">🌤️</span>Partly cloudy
+            </button>
+            <button class="mood-chip" data-mood="overcast">
+              <span class="icon">☁️</span>Overcast
+            </button>
+            <button class="mood-chip" data-mood="rain">
+              <span class="icon">🌧️</span>Rainy
+            </button>
+            <button class="mood-chip" data-mood="storm">
+              <span class="icon">⛈️</span>Stormy
+            </button>
+            <button class="mood-chip" data-mood="dusk">
+              <span class="icon">🌇</span>Dusk
+            </button>
+          </div>
+
+          <div class="mood-description" id="moodDescription">
+            Today feels clear and open. This is a good day for gentle progress – tend a few important plants and leave plenty of time to sit in the light.
+          </div>
+        </section>
+
+        <!-- JOURNAL -->
+        <section class="panel" id="journal" style="margin-top: 12px;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Greenhouse Journal</div>
+              <div class="panel-sub">Let whatever’s on your chest drip onto the page.</div>
+            </div>
+            <div class="panel-badge">Just for you</div>
+          </div>
+
+          <div class="journal-area">
+            <div class="vine-overlay"></div>
+            <textarea id="journalText" placeholder="Write freely. You can be as dramatic or as quiet as you like."></textarea>
+            <div class="journal-footer">
+              <div id="journalStatus">Not yet saved today.</div>
+              <div style="display: flex; gap: 6px;">
+                <button class="btn secondary" type="button" id="clearJournal">Let it go</button>
+                <button class="btn" type="button" id="saveJournal">Save entry</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOREST PATH / SUMMARY -->
+        <section class="panel" id="path" style="margin-top: 12px;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Forest Path</div>
+              <div class="panel-sub">A soft snapshot of how your garden is doing.</div>
+            </div>
+          </div>
+
+          <div class="path-wrapper">
+            <div class="path-timeline">
+              <div class="path-item">
+                <div class="path-marker">🌱</div>
+                <div id="pathTasks">You’ve planted 0 tasks in your beds.</div>
+              </div>
+              <div class="path-item">
+                <div class="path-marker">🌸</div>
+                <div id="pathCompleted">0 of them have bloomed so far.</div>
+              </div>
+              <div class="path-item">
+                <div class="path-marker">🍂</div>
+                <div id="pathEnergy">Your energy pot is currently at 60% – steady sunlight.</div>
+              </div>
+            </div>
+
+            <div class="path-summary" id="pathSummary">
+              As you tend a few seeds at a time and honor your current energy, the path ahead stays kind. Small steps still count as walking.
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span class="icon">🍃</span>
+    <span id="toastText">Saved</span>
+  </div>
+
+  <script>
+    // ===== Toast =====
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+    let toastTimeout;
+
+    function showToast(message) {
+      toastText.textContent = message;
+      toast.classList.add("show");
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1500);
+    }
+
+    // ===== Nav chips scroll =====
+    const navChips = document.querySelectorAll(".nav-chip");
+    navChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const targetId = chip.getAttribute("data-target");
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        navChips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+      });
+    });
+
+    // ===== Mood + Sky logic =====
+    const sky = document.getElementById("sky");
+    const skyEmoji = document.getElementById("skyEmoji");
+    const moodLabel = document.getElementById("moodLabel");
+    const moodTag = document.getElementById("moodTag");
+    const moodDescription = document.getElementById("moodDescription");
+    const moodChips = document.querySelectorAll(".mood-chip");
+
+    const moodConfigs = {
+      sunny: {
+        emoji: "☀️",
+        label: "Clear and bright",
+        tag: "Full sun, wide open sky.",
+        skyGradient: "linear-gradient(180deg, #fff7db, #f9cb8f)",
+        desc: "Today feels golden and open. This is a good day to lean into momentum, take small risks, and move a few bigger plants forward."
+      },
+      partly: {
+        emoji: "🌤️",
+        label: "Partly open",
+        tag: "Soft light with a few clouds.",
+        skyGradient: "linear-gradient(180deg, #fff7e8, #f0ddd0)",
+        desc: "There’s light, but also some haze. It’s okay to move gently, pick 1–3 tasks that feel kind, and leave plenty of white space around them."
+      },
+      overcast: {
+        emoji: "☁️",
+        label: "Overcast",
+        tag: "Muted light, gentle and diffuse.",
+        skyGradient: "linear-gradient(180deg, #e7e2dc, #d4cbc2)",
+        desc: "Your sky is soft and quiet. It’s a good day for low-pressure tending: admin tasks, tidying, stretching, and anything that doesn’t demand sparkle."
+      },
+      rain: {
+        emoji: "🌧️",
+        label: "Rainy",
+        tag: "Cleansing, heavy, but fertile.",
+        skyGradient: "linear-gradient(180deg, #d2dce6, #aab9c8)",
+        desc: "Rain means emotions are close to the surface. Let a few feelings spill onto the page, drink water, and choose only the most essential tasks to water."
+      },
+      storm: {
+        emoji: "⛈️",
+        label: "Stormy",
+        tag: "Loud skies, charged clouds.",
+        skyGradient: "linear-gradient(180deg, #c2c7d4, #80869a)",
+        desc: "Thunder can be both overwhelming and energizing. Anchor yourself in grounding tasks, set strict boundaries, and save big decisions for calmer weather."
+      },
+      dusk: {
+        emoji: "🌇",
+        label: "Dusk",
+        tag: "Soft fade, between worlds.",
+        skyGradient: "linear-gradient(180deg, #f8c7a4, #c88a93)",
+        desc: "Transition energy. This is a portal between phases. Wrap up open loops gently and plant one small seed for the next chapter."
+      }
+    };
+
+    function setMood(moodKey) {
+      const config = moodConfigs[moodKey] || moodConfigs["partly"];
+      sky.style.background = config.skyGradient;
+      skyEmoji.textContent = config.emoji;
+      moodLabel.textContent = config.label;
+      moodTag.textContent = config.tag;
+      moodDescription.textContent = config.desc;
+      moodChips.forEach(chip => chip.classList.remove("active"));
+      const active = document.querySelector(`.mood-chip[data-mood="${moodKey}"]`);
+      if (active) active.classList.add("active");
+      showToast("Sky updated.");
+    }
+
+    moodChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const moodKey = chip.getAttribute("data-mood");
+        setMood(moodKey);
+      });
+    });
+
+    // ===== Energy slider + pot =====
+    const energySlider = document.getElementById("energySlider");
+    const energyValue = document.getElementById("energyValue");
+    const energyWord = document.getElementById("energyWord");
+    const energyNote = document.getElementById("energyNote");
+    const plantStem = document.getElementById("plantStem");
+
+    function describeEnergy(value) {
+      const v = Number(value);
+      energyValue.textContent = v + "%";
+      let word, note, stemHeight;
+      if (v <= 20) {
+        word = "Low";
+        note = "Your soil is dry. Today is more about rest, recovery, and tiny sips of effort if you have it.";
+        stemHeight = 18;
+      } else if (v <= 45) {
+        word = "Gentle";
+        note = "You have a little to give. Focus on easy wins, soft tasks, and anything that replenishes instead of drains.";
+        stemHeight = 28;
+      } else if (v <= 70) {
+        word = "Steady";
+        note = "A kind, stable pot of energy. You can tend a few meaningful plants without burning out.";
+        stemHeight = 36;
+      } else if (v <= 90) {
+        word = "Bright";
+        note = "You’re sunlit. Use this to nudge forward projects that matter, but still keep pockets of shade for yourself.";
+        stemHeight = 46;
+      } else {
+        word = "Blazing";
+        note = "You’re running hot. Channel it consciously so you don’t scorch your soil. Movement, creativity, and then a real pause.";
+        stemHeight = 54;
+      }
+      energyWord.textContent = word;
+      energyNote.textContent = note;
+      plantStem.style.height = stemHeight + "px";
+      document.getElementById("pathEnergy").textContent =
+        `Your energy pot is currently at ${v}% – ${word.toLowerCase()} sunlight.`;
+    }
+
+    energySlider.addEventListener("input", () => {
+      describeEnergy(energySlider.value);
+    });
+
+    // ===== Tasks (Garden) with localStorage =====
+    const taskForm = document.getElementById("taskForm");
+    const taskListEl = document.getElementById("taskList");
+    const gardenTabs = document.querySelectorAll(".garden-tab");
+
+    let tasks = [];
+    const STORAGE_KEY_TASKS = "solarium_tasks";
+
+    function loadTasks() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_TASKS);
+        if (raw) {
+          tasks = JSON.parse(raw) || [];
+        }
+      } catch (e) {
+        tasks = [];
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
+      updatePathSummary();
+    }
+
+    function createTaskCard(task) {
+      const div = document.createElement("div");
+      div.className = "task-card";
+      if (task.completed) div.classList.add("completed");
+      div.dataset.id = task.id;
+
+      const plant = document.createElement("div");
+      plant.className = "task-plant";
+
+      const stem = document.createElement("div");
+      stem.className = "little-stem";
+      if (task.completed) {
+        stem.style.height = "20px";
+      } else if (task.priority === "high") {
+        stem.style.height = "26px";
+      } else if (task.priority === "medium") {
+        stem.style.height = "20px";
+      } else {
+        stem.style.height = "14px";
+      }
+
+      const leafL = document.createElement("div");
+      leafL.className = "little-leaf left";
+      const leafR = document.createElement("div");
+      leafR.className = "little-leaf right";
+      stem.appendChild(leafL);
+      stem.appendChild(leafR);
+      plant.appendChild(stem);
+
+      const content = document.createElement("div");
+      content.className = "task-content";
+      const title = document.createElement("div");
+      title.className = "task-title";
+      title.textContent = task.title || "(Unnamed plant)";
+      const meta = document.createElement("div");
+      meta.className = "task-meta";
+
+      const categoryMap = {
+        personal: "Personal – herbs",
+        work: "Work – flowers",
+        creative: "Creative – vines",
+        relationship: "Relationships – small trees"
+      };
+      const categoryChip = document.createElement("span");
+      categoryChip.className = "task-chip";
+      categoryChip.textContent = categoryMap[task.category] || "Misc bed";
+
+      const priorityChip = document.createElement("span");
+      priorityChip.className = "task-chip";
+      const priorityEmoji = task.priority === "high" ? "☀️ " :
+                             task.priority === "medium" ? "⛅ " : "🌾 ";
+      priorityChip.textContent = priorityEmoji + task.priority + " sun";
+
+      meta.appendChild(categoryChip);
+      meta.appendChild(priorityChip);
+      content.appendChild(title);
+      content.appendChild(meta);
+
+      const actions = document.createElement("div");
+      actions.className = "task-actions";
+
+      const toggleBtn = document.createElement("button");
+      toggleBtn.className = "tiny-btn";
+      toggleBtn.textContent = task.completed ? "Mark unbloomed" : "Mark bloomed";
+      toggleBtn.addEventListener("click", () => toggleTaskCompletion(task.id));
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "tiny-btn danger";
+      deleteBtn.textContent = "Compost";
+      deleteBtn.addEventListener("click", () => deleteTask(task.id));
+
+      actions.appendChild(toggleBtn);
+      actions.appendChild(deleteBtn);
+
+      div.appendChild(plant);
+      div.appendChild(content);
+      div.appendChild(actions);
+
+      return div;
+    }
+
+    function renderTasks(filter = "all") {
+      taskListEl.innerHTML = "";
+      const filtered = tasks.filter(task => {
+        if (filter === "all") return true;
+        return task.category === filter;
+      });
+      if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.style.fontSize = "0.78rem";
+        empty.style.color = "var(--ink-soft)";
+        empty.style.padding = "4px 2px 2px";
+        empty.textContent = "No plants in this bed yet. Plant a small one to start.";
+        taskListEl.appendChild(empty);
+        updatePathSummary();
+        return;
+      }
+      filtered.forEach(task => {
+        taskListEl.appendChild(createTaskCard(task));
+      });
+      updatePathSummary();
+    }
+
+    function addTask(title, category, priority) {
+      const task = {
+        id: Date.now().toString(),
+        title,
+        category,
+        priority,
+        completed: false
+      };
+      tasks.unshift(task);
+      saveTasks();
+      renderTasks(getActiveGardenFilter());
+      showToast("Seed planted.");
+    }
+
+    function toggleTaskCompletion(id) {
+      tasks = tasks.map(t =>
+        t.id === id ? { ...t, completed: !t.completed } : t
+      );
+      saveTasks();
+      renderTasks(getActiveGardenFilter());
+      showToast("Plant updated.");
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(t => t.id !== id);
+      saveTasks();
+      renderTasks(getActiveGardenFilter());
+      showToast("Plant composted.");
+    }
+
+    function getActiveGardenFilter() {
+      const active = document.querySelector(".garden-tab.active");
+      return active ? active.getAttribute("data-filter") : "all";
+    }
+
+    taskForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const titleInput = document.getElementById("taskTitle");
+      const categorySelect = document.getElementById("taskCategory");
+      const prioritySelect = document.getElementById("taskPriority");
+
+      const title = titleInput.value.trim();
+      if (!title) {
+        showToast("Give your plant a name first.");
+        return;
+      }
+      addTask(title, categorySelect.value, prioritySelect.value);
+      titleInput.value = "";
+    });
+
+    gardenTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        gardenTabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const filter = tab.getAttribute("data-filter");
+        renderTasks(filter);
+      });
+    });
+
+    // ===== Journal storage =====
+    const journalText = document.getElementById("journalText");
+    const journalStatus = document.getElementById("journalStatus");
+    const saveJournalBtn = document.getElementById("saveJournal");
+    const clearJournalBtn = document.getElementById("clearJournal");
+    const STORAGE_KEY_JOURNAL = "solarium_journal_today";
+
+    function saveJournal() {
+      const text = journalText.value.trim();
+      localStorage.setItem(STORAGE_KEY_JOURNAL, JSON.stringify({
+        text,
+        timestamp: new Date().toISOString()
+      }));
+      const now = new Date();
+      journalStatus.textContent = `Saved today at ${now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`;
+      showToast("Greenhouse page saved.");
+    }
+
+    function loadJournal() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY_JOURNAL);
+        if (!raw) {
+          journalStatus.textContent = "Not yet saved today.";
+          return;
+        }
+        const { text, timestamp } = JSON.parse(raw);
+        journalText.value = text || "";
+        const time = timestamp ? new Date(timestamp) : null;
+        if (time) {
+          journalStatus.textContent = `Last saved on ${time.toLocaleDateString([], { month: "short", day: "numeric" })} at ${time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}.`;
+        } else {
+          journalStatus.textContent = "Loaded previous entry.";
+        }
+      } catch (e) {
+        journalStatus.textContent = "Not yet saved today.";
+      }
+    }
+
+    saveJournalBtn.addEventListener("click", saveJournal);
+
+    clearJournalBtn.addEventListener("click", () => {
+      journalText.value = "";
+      localStorage.removeItem(STORAGE_KEY_JOURNAL);
+      journalStatus.textContent = "Cleared. The page is blank again.";
+      showToast("Entry released.");
+    });
+
+    // ===== Forest Path summary =====
+    const pathTasks = document.getElementById("pathTasks");
+    const pathCompleted = document.getElementById("pathCompleted");
+    const pathEnergy = document.getElementById("pathEnergy");
+    const pathSummary = document.getElementById("pathSummary");
+
+    function updatePathSummary() {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      pathTasks.textContent = `You’ve planted ${total} ${total === 1 ? "task" : "tasks"} in your beds.`;
+      pathCompleted.textContent = `${completed} ${completed === 1 ? "has" : "have"} bloomed so far.`;
+
+      const energy = Number(energySlider.value);
+      let summary;
+      if (total === 0) {
+        summary = "This week looks like untouched soil. It’s okay if this is a season of rest or quiet planning.";
+      } else if (completed === 0) {
+        summary = "You’ve sown seeds but haven’t harvested yet. Be gentle with yourself and choose one tiny plant to water today.";
+      } else if (completed / total < 0.5) {
+        summary = "Some things are beginning to bloom. Celebrate the ones you’ve tended, and let the others wait until your energy agrees.";
+      } else {
+        summary = "Your path shows more blooms than buds. You’re moving, even if it hasn’t felt dramatic.";
+      }
+
+      if (energy < 30) {
+        summary += " With energy low, pacing yourself is not laziness; it’s gardening wisdom.";
+      } else if (energy > 75) {
+        summary += " With this much light, you can prioritize what truly matters and still keep shade for yourself.";
+      }
+
+      pathSummary.textContent = summary;
+    }
+
+    // ===== Init =====
+    (function init() {
+      loadTasks();
+      renderTasks("all");
+      loadJournal();
+      describeEnergy(energySlider.value);
+      setMood("partly");
+    })();
+  </script>
+</body>
+</html>
